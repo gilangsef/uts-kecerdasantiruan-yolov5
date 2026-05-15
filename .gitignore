@@ -256,3 +256,26 @@ com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
 fabric.properties
+
+
+# ==========================================
+# TAMBAHAN KHUSUS PROYEK UTS RICEGUARD
+# ==========================================
+
+# 1. Selamatkan file tampilan website (PENTING!)
+!*.html
+!templates/
+
+# 2. Blokir dataset raksasa agar GitHub tidak error
+dataset_padi/
+
+# 3. Blokir tumpukan foto hasil uji coba di web
+static/uploads/*
+static/results/*
+
+# 4. Selamatkan "Otak AI" buatanmu agar web tetap jalan
+!runs/
+!runs/train/
+!runs/train/exp2/
+!runs/train/exp2/weights/
+!runs/train/exp2/weights/best.pt

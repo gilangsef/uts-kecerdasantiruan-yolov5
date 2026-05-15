@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="max-w-2xl mx-auto px-4">
+    <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl p-8 border border-white">
+        <div class="flex items-center space-x-3 mb-8">
+            <div class="p-2 bg-emerald-100 rounded-lg">
+                <i data-lucide="file-up" class="w-5 h-5 text-emerald-600"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-slate-800 tracking-tight">Upload Citra</h2>
+        </div>
+
+        <form action="/upload" method="POST" enctype="multipart/form-data" class="space-y-6">
+            <div class="relative group cursor-pointer border-2 border-dashed border-emerald-200 rounded-2xl p-12 text-center hover:bg-emerald-50 hover:border-emerald-400 transition-all" onclick="document.getElementById('fileInput').click()">
+                <input type="file" name="file" id="fileInput" class="hidden" onchange="previewImage(this)">
+                <div id="uploadPlaceholder">
+                    <i data-lucide="cloud-lightning" class="w-12 h-12 mx-auto text-emerald-300 mb-4 animate-bounce"></i>
+                    <p class="font-bold text-slate-600">Ketuk untuk memilih file</p>
+                    <p class="text-slate-400 text-xs mt-1 font-semibold">JPG, PNG ATAU JPEG</p>
+                </div>
+                <img id="imagePreview" class="hidden rounded-xl max-h-64 mx-auto shadow-md">
+            </div>
+            <button type="submit" class="w-full bg-emerald-600 py-4 text-white font-bold rounded-xl shadow-lg shadow-emerald-200 hover:bg-emerald-700 transition-all flex justify-center">
+                MULAI ANALISIS
+            </button>
+        </form>
+    </div>
+
+    {% if result %}
+    <div class="mt-10 bg-white rounded-3xl shadow-xl overflow-hidden animate-fade-in-up" id="resultSection">
+        <div class="p-8">
+            <img src="{{ url_for('static', filename='results/' + result) }}" class="w-full rounded-2xl mb-6 shadow-inner">
+            <div class="space-y-4">
+                {% for det in detections %}
+                <div class="p-4 border-l-4 border-emerald-500 bg-emerald-50 rounded-r-xl">
+                    <div class="flex justify-between items-center mb-2">
+                        <h4 class="font-bold text-slate-800">{{ det.nama }}</h4>
+                        <span class="font-black text-emerald-600">{{ det.confidence }}</span>
+                    </div>
+                    <p class="text-xs text-slate-600"><strong>Saran:</strong> {{ det.saran }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = e => {
+                document.getElementById('imagePreview').src = e.target.result;
+                document.getElementById('imagePreview').classList.remove('hidden');
+                document.getElementById('uploadPlaceholder').classList.add('hidden');
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+{% endblock %}

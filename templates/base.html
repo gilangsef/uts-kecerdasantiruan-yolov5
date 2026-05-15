@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RiceGuard Pro - UMLA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Poppins', sans-serif; }
+        /* Perbaikan: Gunakan tanda hubung - bukan pagar # */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-50 via-emerald-50 to-teal-50 min-h-screen relative overflow-x-hidden">
+    <div class="absolute top-0 left-0 w-full h-64 bg-gradient-to-b from-emerald-200/30 to-transparent -z-10 blur-3xl"></div>
+
+    <nav class="fixed w-full z-[100] bg-white/70 backdrop-blur-md border-b border-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="/" class="flex items-center space-x-2">
+                <div class="p-2 bg-emerald-600 rounded-lg shadow-lg">
+                    <i data-lucide="sprout" class="text-white w-5 h-5"></i>
+                </div>
+                <span class="text-xl font-extrabold text-slate-800 tracking-tight">RiceGuard <span class="text-emerald-600">AI</span></span>
+            </a>
+
+            <div class="hidden md:flex space-x-8">
+                <a href="/" class="text-sm font-bold text-slate-500 hover:text-emerald-600 transition">Home</a>
+                <a href="/upload-page" class="text-sm font-bold text-slate-500 hover:text-emerald-600 transition">Upload</a>
+                <a href="/scan-page" class="text-sm font-bold text-slate-500 hover:text-emerald-600 transition">Scan</a>
+            </div>
+
+            <button id="menu-btn" class="md:hidden p-2 rounded-lg hover:bg-emerald-50 transition text-slate-600">
+                <i data-lucide="menu" id="menu-icon" class="w-6 h-6"></i>
+            </button>
+        </div>
+
+        <div id="mobile-menu" class="hidden md:hidden absolute w-full bg-white border-b border-slate-100 shadow-xl animate-fade-in">
+            <div class="flex flex-col p-6 space-y-4">
+                <a href="/" class="flex items-center space-x-3 text-sm font-bold text-slate-600 hover:text-emerald-600 p-3 rounded-xl hover:bg-emerald-50 transition">
+                    <i data-lucide="home" class="w-4 h-4"></i> <span>Home</span>
+                </a>
+                <a href="/upload-page" class="flex items-center space-x-3 text-sm font-bold text-slate-600 hover:text-emerald-600 p-3 rounded-xl hover:bg-emerald-50 transition">
+                    <i data-lucide="image" class="w-4 h-4"></i> <span>Upload</span>
+                </a>
+                <a href="/scan-page" class="flex items-center space-x-3 text-sm font-bold text-slate-600 hover:text-emerald-600 p-3 rounded-xl hover:bg-emerald-50 transition">
+                    <i data-lucide="scan" class="w-4 h-4"></i> <span>Scan Real-time</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="pt-28 pb-10">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="text-center pb-8 text-slate-400 text-sm font-medium">
+        &copy; 2026 UTS Kecerdasan Tiruan - Gilang Septia Firmansyah.
+    <script>
+        // Inisialisasi Icon pertama kali
+        lucide.createIcons();
+
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIcon = document.getElementById('menu-icon');
+
+        menuBtn.addEventListener('click', () => {
+            // Toggle class hidden pada menu
+            const isOpened = !mobileMenu.classList.toggle('hidden');
+            
+            // Buat elemen i baru untuk menggantikan yang lama agar Lucide bisa merender ulang
+            const newIconName = isOpened ? 'x' : 'menu';
+            
+            // Cara paling ampuh: Ganti innerHTML tombol dengan icon yang baru
+            menuBtn.innerHTML = `<i data-lucide="${newIconName}" class="w-6 h-6"></i>`;
+            
+            // Panggil Lucide lagi untuk merender icon yang baru dimasukkan
+            lucide.createIcons();
+        });
+    </script>3
+
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in { animation: fadeIn 0.3s ease-out forwards; }
+    </style>
+</body>
+</html>

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="max-w-4xl mx-auto text-center mt-10">
+    <h1 class="text-5xl font-extrabold text-slate-900 mb-6">Selamat Datang di <span class="text-emerald-600">RiceGuard</span></h1>
+    <p class="text-slate-500 text-lg mb-12">Sistem pakar identifikasi penyakit padi berbasis visi komputer.</p>
+    
+    <div class="grid md:grid-cols-2 gap-8">
+        <a href="/upload-page" class="group bg-white p-10 rounded-3xl shadow-sm border border-slate-100 hover:border-emerald-500 transition-all hover:shadow-xl flex flex-col items-center">
+            <div class="w-20 h-20 bg-emerald-50 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition">
+                <i data-lucide="image-plus" class="w-10 h-10 text-emerald-600"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-slate-800">Analisis Gambar</h2>
+            <p class="text-slate-400 mt-2">Unggah foto daun dari galeri perangkat Anda.</p>
+        </a>
+
+        <a href="/scan-page" class="group bg-white p-10 rounded-3xl shadow-sm border border-slate-100 hover:border-teal-500 transition-all hover:shadow-xl flex flex-col items-center">
+            <div class="w-20 h-20 bg-teal-50 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition">
+                <i data-lucide="camera" class="w-10 h-10 text-teal-600"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-slate-800">Scan Kamera</h2>
+            <p class="text-slate-400 mt-2">Gunakan kamera untuk deteksi real-time.</p>
+        </a>
+    </div>
+</div>
+{% endblock %}
