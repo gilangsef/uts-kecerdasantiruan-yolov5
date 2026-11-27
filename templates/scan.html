@@ -1,79 +1,81 @@
-{% extends 'base.html' %}
-{% block content %}
+{% extends 'base.html' %} {% block content %}
 <div class="max-w-4xl mx-auto px-4">
-    <div class="text-center mb-8">
-        <h2 class="text-3xl font-extrabold text-slate-800">Real-time <span class="text-emerald-600">Camera Scan</span></h2>
-        <p class="text-slate-500 text-sm">Arahkan kamera ke daun padi untuk deteksi otomatis</p>
-    </div>
+  <div class="text-center mb-8">
+    <h2 class="text-3xl font-extrabold text-slate-800">Real-time <span class="text-emerald-600">Camera Scan</span></h2>
+    <p class="text-slate-500 text-sm">Arahkan kamera ke daun padi untuk deteksi otomatis</p>
+  </div>
 
-    <div class="bg-white p-4 rounded-3xl shadow-2xl border border-white mb-8">
-        <div class="relative rounded-2xl bg-slate-900 overflow-hidden aspect-video shadow-inner">
-            <video id="webcam" autoplay playsinline class="w-full h-full object-cover"></video>
-            <canvas id="canvas" class="hidden"></canvas>
-            
-            <div class="absolute inset-0 pointer-events-none border-[20px] border-black/10">
-                <div class="w-full h-1 bg-emerald-500/50 shadow-[0_0_15px_rgba(16,185,129,0.8)] animate-pulse" id="scanner-line"></div>
-            </div>
-        </div>
-    </div>
+  <div class="bg-white p-4 rounded-3xl shadow-2xl border border-white mb-8">
+    <div class="relative rounded-2xl bg-slate-900 overflow-hidden aspect-video shadow-inner">
+      <video id="webcam" autoplay playsinline class="w-full h-full object-cover"></video>
+      <canvas id="canvas" class="hidden"></canvas>
 
-    <div id="live-results" class="grid grid-cols-1 gap-4 transition-all">
-        <div class="text-center py-10 text-slate-400 bg-white/50 rounded-2xl border-2 border-dashed border-slate-200">
-            <i data-lucide="scan-eye" class="w-10 h-10 mx-auto mb-2 opacity-20"></i>
-            <p class="text-sm font-medium italic underline">Menunggu objek terdeteksi...</p>
-        </div>
+      <div class="absolute inset-0 pointer-events-none border-[20px] border-black/10">
+        <div
+          class="w-full h-1 bg-emerald-500/50 shadow-[0_0_15px_rgba(16,185,129,0.8)] animate-pulse"
+          id="scanner-line"
+        ></div>
+      </div>
     </div>
+  </div>
+
+  <div id="live-results" class="grid grid-cols-1 gap-4 transition-all">
+    <div class="text-center py-10 text-slate-400 bg-white/50 rounded-2xl border-2 border-dashed border-slate-200">
+      <i data-lucide="scan-eye" class="w-10 h-10 mx-auto mb-2 opacity-20"></i>
+      <p class="text-sm font-medium italic underline">Menunggu objek terdeteksi...</p>
+    </div>
+  </div>
 </div>
 
 <script>
-    let video = document.getElementById('webcam');
-    let canvas = document.getElementById('canvas');
-    let resultArea = document.getElementById('live-results');
-    let isProcessing = false;
+  let video = document.getElementById("webcam");
+  let canvas = document.getElementById("canvas");
+  let resultArea = document.getElementById("live-results");
+  let isProcessing = false;
 
-    // Aktifkan Kamera
-    async function startCamera() {
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({ 
-                video: { facingMode: 'environment' } 
-            });
-            video.srcObject = stream;
-        } catch (e) {
-            alert("Akses kamera ditolak.");
-        }
+  // Aktifkan Kamera
+  async function startCamera() {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: "environment" },
+      });
+      video.srcObject = stream;
+    } catch (e) {
+      alert("Akses kamera ditolak.");
     }
+  }
 
-    // Fungsi Kirim Frame ke AI
-    async function captureFrame() {
-        if (isProcessing) return;
-        isProcessing = true;
+  // Fungsi Kirim Frame ke AI
+  async function captureFrame() {
+    if (isProcessing) return;
+    isProcessing = true;
 
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        canvas.getContext('2d').drawImage(video, 0, 0);
-        
-        const dataUrl = canvas.toDataURL('image/jpeg', 0.5); // Kompres agar cepat
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    canvas.getContext("2d").drawImage(video, 0, 0);
 
-        try {
-            const res = await fetch('/scan_frame', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ image: dataUrl })
-            });
-            const data = await res.json();
-            updateUI(data.detections);
-        } catch (e) {
-            console.error(e);
-        } finally {
-            isProcessing = false;
-        }
+    const dataUrl = canvas.toDataURL("image/jpeg", 0.5); // Kompres agar cepat
+
+    try {
+      const res = await fetch("/scan_frame", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ image: dataUrl }),
+      });
+      const data = await res.json();
+      updateUI(data.detections);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      isProcessing = false;
     }
+  }
 
-    function updateUI(detections) {
-        if (detections.length > 0) {
-            let html = '';
-            detections.forEach(det => {
-                html += `
+  function updateUI(detections) {
+    if (detections.length > 0) {
+      let html = "";
+      detections.forEach((det) => {
+        html += `
                 <div class="bg-white p-6 rounded-2xl shadow-lg border-l-8 border-${det.color}-500 animate-fade-in">
                     <div class="flex justify-between items-start">
                         <div>
@@ -88,14 +90,13 @@
                         <strong>Saran:</strong> ${det.saran}
                     </p>
                 </div>`;
-            });
-            resultArea.innerHTML = html;
-        }
+      });
+      resultArea.innerHTML = html;
     }
+  }
 
-    // Mulai Kamera dan Interval Deteksi (tiap 1 detik agar tidak lag)
-    startCamera();
-    setInterval(captureFrame, 1000); 
-
+  // Mulai Kamera dan Interval Deteksi (tiap 1 detik agar tidak lag)
+  startCamera();
+  setInterval(captureFrame, 1000);
 </script>
 {% endblock %}
